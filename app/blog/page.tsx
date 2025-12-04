@@ -1,43 +1,44 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
-const blogPosts = [
-    {
-        id: 1,
-        title: "The Future of Field Sales Automation",
-        category: "Industry Insights",
-        date: "Dec 01, 2024",
-        excerpt: "How AI and real-time data are transforming the way field sales teams operate in the pharmaceutical industry.",
-        image: "📊"
-    },
-    {
-        id: 2,
-        title: "5 Ways to Optimize Inventory Management",
-        category: "Tutorials",
-        date: "Nov 28, 2024",
-        excerpt: "Learn how to reduce shrinkage and improve stock visibility using SwiftPoint and IMS.",
-        image: "📦"
-    },
-    {
-        id: 3,
-        title: "eScience Nominated for AWS Partner Award",
-        category: "Company News",
-        date: "Nov 15, 2024",
-        excerpt: "We are proud to announce our nomination for the prestigious AWS Partner of the Year award.",
-        image: "🏆"
-    },
-    {
-        id: 4,
-        title: "Going Paperless with Swift-Forms",
-        category: "Product Updates",
-        date: "Nov 10, 2024",
-        excerpt: "Discover the new features in Swift-Forms 2.0 that make digital transformation easier than ever.",
-        image: "📱"
-    }
-];
+interface BlogPost {
+    id: string;
+    title: string;
+    excerpt: string;
+    category: string;
+    coverImage: string | null;
+    slug: string;
+    createdAt: string;
+}
 
 export default function BlogPage() {
+    const [blogs, setBlogs] = useState<BlogPost[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [activeCategory, setActiveCategory] = useState('All');
+
+    useEffect(() => {
+        fetch('/api/blogs')
+            .then((res) => res.json())
+            .then((data) => {
+                // Filter only published blogs if this was a real public API, 
+                // but for now our API returns all. In a real app, the API should filter.
+                // Let's assume the API returns what we need or we filter here.
+                const publishedBlogs = data.filter((blog: any) => blog.published);
+                setBlogs(publishedBlogs);
+                setLoading(false);
+            })
+            .catch((err) => console.error(err));
+    }, []);
+
+    const categories = ['All', 'Industry Insights', 'Product Updates', 'Tutorials', 'Company News'];
+
+    const filteredBlogs = activeCategory === 'All'
+        ? blogs
+        : blogs.filter(blog => blog.category === activeCategory);
+
     return (
         <div className="min-h-screen bg-black text-white pt-24 pb-12">
             <div className="container mx-auto px-4">
@@ -51,54 +52,82 @@ export default function BlogPage() {
                     </p>
                 </div>
 
-                {/* Categories */}
+                {/* Category Filter */}
                 <div className="flex flex-wrap justify-center gap-4 mb-12">
-                    {['All', 'Industry Insights', 'Product Updates', 'Tutorials', 'Company News'].map((cat, idx) => (
+                    {categories.map((category) => (
                         <button
-                            key={idx}
-                            className={`px-6 py-2 rounded-full border border-white/10 transition-all hover:bg-white/10 ${idx === 0 ? 'bg-white text-black font-bold border-white' : 'text-gray-300'}`}
+                            key={category}
+                            onClick={() => setActiveCategory(category)}
+                            className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${activeCategory === category
+                                    ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/25'
+                                    : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white'
+                                }`}
                         >
-                            {cat}
+                            {category}
                         </button>
                     ))}
                 </div>
 
                 {/* Blog Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {blogPosts.map((post) => (
-                        <article key={post.id} className="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:transform hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/20">
-                            <div className="h-48 bg-gradient-to-br from-gray-800 to-black flex items-center justify-center text-6xl group-hover:scale-110 transition-transform duration-500">
-                                {post.image}
-                            </div>
-                            <div className="p-6">
-                                <div className="flex justify-between items-center mb-3">
-                                    <span className="text-xs font-bold text-teal-400 uppercase tracking-wider">{post.category}</span>
-                                    <span className="text-xs text-gray-500">{post.date}</span>
+                {loading ? (
+                    <div className="text-center py-20 text-gray-500">Loading articles...</div>
+                ) : filteredBlogs.length > 0 ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+                        {filteredBlogs.map((blog) => (
+                            <article key={blog.id} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:transform hover:scale-[1.02] transition-all duration-300 group">
+                                <div className="h-48 bg-gray-800 relative overflow-hidden">
+                                    {blog.coverImage ? (
+                                        <Image
+                                            src={blog.coverImage}
+                                            alt={blog.title}
+                                            fill
+                                            className="object-cover group-hover:scale-110 transition-transform duration-500"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900 text-gray-600">
+                                            No Image
+                                        </div>
+                                    )}
+                                    <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium text-teal-400 border border-teal-500/30">
+                                        {blog.category}
+                                    </div>
                                 </div>
-                                <h3 className="text-xl font-bold mb-3 group-hover:text-blue-400 transition-colors">{post.title}</h3>
-                                <p className="text-gray-400 text-sm mb-4 line-clamp-3">{post.excerpt}</p>
-                                <Link href="#" className="inline-flex items-center text-sm font-semibold text-white hover:text-teal-400 transition-colors">
-                                    Read Article
-                                    <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-                                </Link>
-                            </div>
-                        </article>
-                    ))}
-                </div>
+                                <div className="p-6">
+                                    <div className="text-gray-500 text-xs mb-3">{new Date(blog.createdAt).toLocaleDateString()}</div>
+                                    <h3 className="text-xl font-bold mb-3 group-hover:text-teal-400 transition-colors line-clamp-2">
+                                        {blog.title}
+                                    </h3>
+                                    <p className="text-gray-400 text-sm mb-4 line-clamp-3">
+                                        {blog.excerpt}
+                                    </p>
+                                    <Link href={`#`} className="inline-flex items-center text-teal-400 text-sm font-medium hover:gap-2 transition-all">
+                                        Read Article <span className="ml-1">→</span>
+                                    </Link>
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-20 bg-white/5 rounded-2xl border border-white/10">
+                        <p className="text-gray-400 text-lg">No articles found in this category.</p>
+                    </div>
+                )}
 
-                {/* Newsletter CTA */}
-                <div className="mt-20 bg-gradient-to-r from-blue-900/40 to-teal-900/40 border border-white/10 rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
-                    <div className="absolute top-0 left-0 w-full h-full bg-[url('/assets/images/grid.png')] opacity-10"></div>
-                    <div className="relative z-10">
+                {/* Newsletter Section */}
+                <div className="bg-gradient-to-r from-teal-900/20 to-blue-900/20 border border-white/10 rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-full bg-[url('/assets/images/grid.svg')] opacity-10"></div>
+                    <div className="relative z-10 max-w-2xl mx-auto">
                         <h2 className="text-3xl font-bold mb-4">Subscribe to our Newsletter</h2>
-                        <p className="text-gray-300 mb-8 max-w-xl mx-auto">Get the latest insights and product updates delivered directly to your inbox. No spam, just value.</p>
-                        <form className="flex flex-col md:flex-row gap-4 justify-center max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
+                        <p className="text-gray-400 mb-8">
+                            Get the latest insights and product updates delivered directly to your inbox.
+                        </p>
+                        <form className="flex flex-col sm:flex-row gap-4">
                             <input
                                 type="email"
-                                placeholder="Enter your email"
-                                className="flex-1 px-6 py-3 rounded-full bg-black/50 border border-white/20 text-white focus:outline-none focus:border-teal-400"
+                                placeholder="Enter your email address"
+                                className="flex-1 bg-black/50 border border-white/10 rounded-lg px-6 py-3 text-white focus:outline-none focus:border-teal-500 transition-colors"
                             />
-                            <button className="px-8 py-3 rounded-full bg-white text-black font-bold hover:bg-teal-400 transition-colors">
+                            <button className="bg-white text-black font-bold px-8 py-3 rounded-lg hover:bg-gray-200 transition-colors">
                                 Subscribe
                             </button>
                         </form>
