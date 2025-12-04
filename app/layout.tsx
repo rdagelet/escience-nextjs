@@ -22,10 +22,11 @@ export default function RootLayout({
         <meta name="description" content="Providing mobile solutions, CRM tools, inventory management, and custom software since 2000." />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <SessionProvider>
-        {children}
-      </SessionProvider>
-    </body>
+      <body className={`${montserrat.variable} antialiased`}>
+        <SessionProvider>
+          {children}
+        </SessionProvider>
+      </body>
     </html >
   );
 }
