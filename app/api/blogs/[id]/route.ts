@@ -5,10 +5,11 @@ import { authOptions } from '../../auth/[...nextauth]/route';
 
 const prisma = new PrismaClient();
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
+        const { id } = await params;
         const blog = await prisma.blogPost.findUnique({
-            where: { id: params.id },
+            where: { id },
         });
 
         if (!blog) {
@@ -21,18 +22,19 @@ export async function GET(request: Request, { params }: { params: { id: string }
     }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await getServerSession(authOptions);
     if (!session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     try {
+        const { id } = await params;
         const body = await request.json();
         const { title, excerpt, content, category, coverImage, published } = body;
 
         const blog = await prisma.blogPost.update({
-            where: { id: params.id },
+            where: { id },
             data: {
                 title,
                 excerpt,
@@ -49,15 +51,16 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await getServerSession(authOptions);
     if (!session) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     try {
+        const { id } = await params;
         await prisma.blogPost.delete({
-            where: { id: params.id },
+            where: { id },
         });
 
         return NextResponse.json({ message: 'Blog deleted successfully' });
