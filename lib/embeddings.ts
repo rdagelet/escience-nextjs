@@ -3,17 +3,24 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-// Initialize OpenAI embeddings
-const embeddings = new OpenAIEmbeddings({
-    openAIApiKey: process.env.OPENAI_API_KEY,
-    modelName: 'text-embedding-ada-002', // 1536 dimensions
-});
+// Lazy initialization to avoid build-time errors
+let embeddings: OpenAIEmbeddings | null = null;
+
+function getEmbeddings(): OpenAIEmbeddings {
+    if (!embeddings) {
+        embeddings = new OpenAIEmbeddings({
+            openAIApiKey: process.env.OPENAI_API_KEY,
+            modelName: 'text-embedding-ada-002', // 1536 dimensions
+        });
+    }
+    return embeddings;
+}
 
 /**
  * Generate embedding vector for text
  */
 export async function generateEmbedding(text: string): Promise<number[]> {
-    const embedding = await embeddings.embedQuery(text);
+    const embedding = await getEmbeddings().embedQuery(text);
     return embedding;
 }
 

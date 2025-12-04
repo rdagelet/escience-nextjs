@@ -10,11 +10,14 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@langchain/core": "^0.3.36",
+    "@langchain/openai": "^0.3.15",
     "@prisma/client": "^5.10.0",
     "@types/bcryptjs": "^2.4.6",
     "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.23.25",
+    "langchain": "^0.3.11",
     "next": "16.0.7",
     "next-auth": "^4.24.13",
     "openai": "^6.9.1",

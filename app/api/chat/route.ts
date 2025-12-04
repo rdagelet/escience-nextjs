@@ -3,12 +3,21 @@ import OpenAI from 'openai';
 import { PrismaClient } from '@prisma/client';
 import { searchSimilarChunks } from '@/lib/embeddings';
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 
 const prisma = new PrismaClient();
+
+// Lazy initialization to avoid build-time errors
+let openai: OpenAI | null = null;
+function getOpenAI(): OpenAI {
+    if (!openai) {
+        openai = new OpenAI({
+            apiKey: process.env.OPENAI_API_KEY,
+        });
+    }
+    return openai;
+}
 
 export async function POST(request: Request) {
     try {
@@ -64,7 +73,7 @@ export async function POST(request: Request) {
             { role: 'user', content: message },
         ];
 
-        const completion = await openai.chat.completions.create({
+        const completion = await getOpenAI().chat.completions.create({
             model: 'gpt-3.5-turbo', // Cost-effective and fast
             messages: messages as any,
             max_tokens: 150,
