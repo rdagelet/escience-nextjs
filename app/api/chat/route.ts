@@ -1,43 +1,65 @@
 import { NextResponse } from 'next/server';
+import OpenAI from 'openai';
 
-export async function POST(req: Request) {
+// Initialize OpenAI client
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+});
+
+export async function POST(request: Request) {
     try {
-        const { message } = await req.json();
-        const lowerMsg = message.toLowerCase();
+        const { message, history } = await request.json();
 
-        let reply = "I'm here to help! You can ask me about our products, careers, internships, or contact information.";
-
-        // Simulated RAG (Retrieval Augmented Generation) Logic
-        if (lowerMsg.includes('career') || lowerMsg.includes('job') || lowerMsg.includes('work') || lowerMsg.includes('hiring')) {
-            reply = "We are always looking for talented individuals to join our team of 100+ tech specialists! We offer opportunities for Developers, QA Engineers, and Sales professionals. We also have an active Internship program. You can send your resume to careers@electronicscience.net.";
-        }
-        else if (lowerMsg.includes('intern') || lowerMsg.includes('ojt')) {
-            reply = "Yes, we have a robust Internship/OJT program! Many of our current senior developers started as interns. It's a great way to learn real-world mobile development. Please email your CV to careers@electronicscience.net.";
-        }
-        else if (lowerMsg.includes('product') || lowerMsg.includes('solution') || lowerMsg.includes('offer')) {
-            reply = "We specialize in mobile solutions including:\n\n1. PocketWiSE (Sales Force Automation)\n2. Swift-Forms (Paperless Operations)\n3. SwiftPoint/IMS (Inventory Management)\n4. Swift Rewards (Loyalty Systems)\n\nWhich one would you like to know more about?";
-        }
-        else if (lowerMsg.includes('pocketwise') || lowerMsg.includes('sfe')) {
-            reply = "PocketWiSE is our flagship Sales Force Effectiveness (SFE) tool. It helps large field forces track attendance, inventory, and sales orders in real-time. It's used by major pharmaceutical and FMCG companies.";
-        }
-        else if (lowerMsg.includes('swift') || lowerMsg.includes('form')) {
-            reply = "Swift-Forms allows you to digitize any paper form (leave requests, expense reports, surveys) into a mobile app. It eliminates waiting time and promotes contactless transactions.";
-        }
-        else if (lowerMsg.includes('contact') || lowerMsg.includes('email') || lowerMsg.includes('phone') || lowerMsg.includes('address')) {
-            reply = "You can reach us at:\n\nEmail: sales@electronicscience.net\nPhone: 02-8850-1324\n\nWe are located in Manila, Philippines.";
-        }
-        else if (lowerMsg.includes('hello') || lowerMsg.includes('hi')) {
-            reply = "Hello! Welcome to eScience. How can I assist you today?";
-        }
-        else if (lowerMsg.includes('who are you') || lowerMsg.includes('bot')) {
-            reply = "I am the eScience AI Assistant, powered by Next.js. I can answer questions about our company and services.";
+        if (!process.env.OPENAI_API_KEY) {
+            return NextResponse.json(
+                { error: 'OpenAI API key not configured' },
+                { status: 500 }
+            );
         }
 
-        // Simulate network delay for realism
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // System prompt to define the bot's persona and knowledge
+        const systemPrompt = `You are the AI Assistant for Electronic Science (eScience), a leading software solutions provider in the Philippines established in 2000.
+    
+    Your goal is to help visitors understand our services and products.
+    
+    Key Information:
+    - We specialize in mobile solutions, CRM tools, inventory management, and custom software.
+    - Our flagship products include:
+      - PocketWiSE (Sales Force Automation)
+      - 1-Order (Ordering System)
+      - 1-Inventory (Inventory Management)
+      - 1-Service (Field Service Management)
+    - We have over 20 years of experience and serve top companies in the Philippines.
+    - Contact email: info@electronicscience.net
+    
+    Tone: Professional, helpful, and innovative.
+    Keep responses concise (under 3 sentences if possible) unless asked for details.`;
+
+        // Construct messages array with history
+        const messages = [
+            { role: 'system', content: systemPrompt },
+            ...(history || []).map((msg: any) => ({
+                role: msg.sender === 'user' ? 'user' : 'assistant',
+                content: msg.text,
+            })),
+            { role: 'user', content: message },
+        ];
+
+        const completion = await openai.chat.completions.create({
+            model: 'gpt-3.5-turbo', // Cost-effective and fast
+            messages: messages as any,
+            max_tokens: 150,
+            temperature: 0.7,
+        });
+
+        const reply = completion.choices[0].message.content;
 
         return NextResponse.json({ reply });
     } catch (error) {
-        return NextResponse.json({ reply: "I'm sorry, I encountered an error processing your request." }, { status: 500 });
+        console.error('OpenAI API Error:', error);
+        return NextResponse.json(
+            { error: 'Failed to generate response' },
+            { status: 500 }
+        );
     }
 }
