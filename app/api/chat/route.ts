@@ -61,8 +61,8 @@ export async function POST(request: Request) {
         try {
             await prisma.chatLog.create({
                 data: {
-                    message: message,
-                    response: reply || 'No response',
+                    userQuery: message,
+                    aiResponse: reply || 'No response',
                 },
             });
         } catch (dbError) {
