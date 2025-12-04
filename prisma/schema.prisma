@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  excerpt     String
+  content     String   @db.Text
+  coverImage  String?
+  category    String
+  published   Boolean  @default(false)
+  author      String   @default("eScience Team")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String   @db.Text
+  features    String[]
+  screenshots String[]
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model JobOpening {
+  id          String   @id @default(cuid())
+  title       String
+  department  String
+  location    String   @default("Manila, Philippines")
+  type        String   @default("Full-time")
+  description String   @db.Text
+  requirements String[]
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  name        String
+  title       String
+  company     String
+  quote       String   @db.Text
+  avatar      String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ChatLog {
+  id        String   @id @default(cuid())
+  userQuery String   @db.Text
+  aiResponse String  @db.Text
+  sentiment String?
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+}
