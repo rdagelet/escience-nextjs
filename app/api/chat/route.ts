@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
+import { PrismaClient } from '@prisma/client';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
+
+const prisma = new PrismaClient();
 
 export async function POST(request: Request) {
     try {
@@ -53,6 +56,19 @@ export async function POST(request: Request) {
         });
 
         const reply = completion.choices[0].message.content;
+
+        // Save to database
+        try {
+            await prisma.chatLog.create({
+                data: {
+                    userMessage: message,
+                    botResponse: reply || 'No response',
+                },
+            });
+        } catch (dbError) {
+            console.error('Failed to save chat log:', dbError);
+            // Continue even if logging fails
+        }
 
         return NextResponse.json({ reply });
     } catch (error) {
