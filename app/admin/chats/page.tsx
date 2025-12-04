@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 
 interface ChatLog {
     id: string;
-    userMessage: string;
-    botResponse: string;
+    message: string;
+    response: string;
     createdAt: string;
 }
 
@@ -49,11 +49,11 @@ export default function ChatLogsPage() {
                         <div className="space-y-3">
                             <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
                                 <p className="text-xs text-blue-400 mb-1 font-medium">User</p>
-                                <p className="text-white">{chat.userMessage}</p>
+                                <p className="text-white">{chat.message}</p>
                             </div>
                             <div className="bg-teal-500/10 border border-teal-500/30 rounded-lg p-3">
                                 <p className="text-xs text-teal-400 mb-1 font-medium">AI Assistant</p>
-                                <p className="text-gray-300">{chat.botResponse}</p>
+                                <p className="text-gray-300">{chat.response}</p>
                             </div>
                         </div>
                     </div>
