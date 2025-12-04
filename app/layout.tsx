@@ -2,6 +2,7 @@
 
 import { Montserrat } from "next/font/google";
 import "./globals.css";
+import SessionProvider from "@/components/SessionProvider";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -21,11 +22,10 @@ export default function RootLayout({
         <meta name="description" content="Providing mobile solutions, CRM tools, inventory management, and custom software since 2000." />
         <link rel="manifest" href="/manifest.json" />
       </head>
-      <body
-        className={`${montserrat.variable} antialiased`}
-      >
+      <SessionProvider>
         {children}
-      </body>
-    </html>
+      </SessionProvider>
+    </body>
+    </html >
   );
 }
