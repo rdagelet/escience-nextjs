@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { PrismaClient } from '@prisma/client';
+import { searchSimilarChunks } from '@/lib/embeddings';
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -20,6 +21,21 @@ export async function POST(request: Request) {
             );
         }
 
+        // Search knowledge base for relevant context
+        let knowledgeContext = '';
+        try {
+            const relevantChunks = await searchSimilarChunks(message, 3);
+            if (relevantChunks.length > 0) {
+                knowledgeContext = '\n\nRELEVANT KNOWLEDGE BASE:\n' +
+                    relevantChunks
+                        .map((chunk, i) => `[${i + 1}] ${chunk.content}`)
+                        .join('\n\n');
+            }
+        } catch (embeddingError) {
+            console.warn('Knowledge search failed:', embeddingError);
+            // Continue without knowledge base if search fails
+        }
+
         // System prompt to define the bot's persona and knowledge
         const systemPrompt = `You are the AI Assistant for Electronic Science (eScience), a leading software solutions provider in the Philippines established in 2000.
     
@@ -36,7 +52,7 @@ export async function POST(request: Request) {
     - Contact email: info@electronicscience.net
     
     Tone: Professional, helpful, and innovative.
-    Keep responses concise (under 3 sentences if possible) unless asked for details.`;
+    Keep responses concise (under 3 sentences if possible) unless asked for details.${knowledgeContext}`;
 
         // Construct messages array with history
         const messages = [
