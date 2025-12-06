@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import MultiImageUploader from './MultiImageUploader';
 
 export default function ProductEditor({ params }: { params: { id?: string } }) {
     const router = useRouter();
@@ -19,7 +20,6 @@ export default function ProductEditor({ params }: { params: { id?: string } }) {
     });
 
     const [featureInput, setFeatureInput] = useState('');
-    const [screenshotInput, setScreenshotInput] = useState('');
 
     useEffect(() => {
         if (!isNew && params?.id) {
@@ -61,21 +61,20 @@ export default function ProductEditor({ params }: { params: { id?: string } }) {
         }
     };
 
-    const addItem = (type: 'features' | 'screenshots', value: string) => {
+    const addFeature = (value: string) => {
         if (value.trim()) {
             setFormData({
                 ...formData,
-                [type]: [...formData[type], value.trim()],
+                features: [...formData.features, value.trim()],
             });
-            if (type === 'features') setFeatureInput('');
-            else setScreenshotInput('');
+            setFeatureInput('');
         }
     };
 
-    const removeItem = (type: 'features' | 'screenshots', index: number) => {
-        const newItems = [...formData[type]];
-        newItems.splice(index, 1);
-        setFormData({ ...formData, [type]: newItems });
+    const removeFeature = (index: number) => {
+        const newFeatures = [...formData.features];
+        newFeatures.splice(index, 1);
+        setFormData({ ...formData, features: newFeatures });
     };
 
     if (loading) return <div className="text-white">Loading...</div>;
@@ -126,13 +125,13 @@ export default function ProductEditor({ params }: { params: { id?: string } }) {
                                     type="text"
                                     value={featureInput}
                                     onChange={(e) => setFeatureInput(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addItem('features', featureInput))}
+                                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addFeature(featureInput))}
                                     className="flex-1 bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-teal-500"
                                     placeholder="Add a feature..."
                                 />
                                 <button
                                     type="button"
-                                    onClick={() => addItem('features', featureInput)}
+                                    onClick={() => addFeature(featureInput)}
                                     className="bg-white/10 hover:bg-white/20 text-white px-4 rounded-lg"
                                 >
                                     Add
@@ -144,7 +143,7 @@ export default function ProductEditor({ params }: { params: { id?: string } }) {
                                         <span className="text-gray-300 text-sm">{item}</span>
                                         <button
                                             type="button"
-                                            onClick={() => removeItem('features', index)}
+                                            onClick={() => removeFeature(index)}
                                             className="text-red-400 hover:text-red-300 text-xs"
                                         >
                                             Remove
@@ -169,38 +168,13 @@ export default function ProductEditor({ params }: { params: { id?: string } }) {
                         </div>
 
                         <div className="bg-white/5 border border-white/10 p-6 rounded-xl space-y-4">
-                            <label className="block text-gray-400 text-sm mb-2">Screenshots (URLs)</label>
-                            <div className="flex gap-2 mb-2">
-                                <input
-                                    type="text"
-                                    value={screenshotInput}
-                                    onChange={(e) => setScreenshotInput(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addItem('screenshots', screenshotInput))}
-                                    className="flex-1 bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-teal-500"
-                                    placeholder="https://..."
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => addItem('screenshots', screenshotInput)}
-                                    className="bg-white/10 hover:bg-white/20 text-white px-4 rounded-lg"
-                                >
-                                    Add
-                                </button>
-                            </div>
-                            <ul className="space-y-2">
-                                {formData.screenshots.map((item, index) => (
-                                    <li key={index} className="flex justify-between items-center bg-white/5 p-3 rounded-lg">
-                                        <span className="text-gray-300 text-sm truncate w-32">{item}</span>
-                                        <button
-                                            type="button"
-                                            onClick={() => removeItem('screenshots', index)}
-                                            className="text-red-400 hover:text-red-300 text-xs"
-                                        >
-                                            Remove
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
+                            <MultiImageUploader
+                                values={formData.screenshots}
+                                onChange={(urls) => setFormData({ ...formData, screenshots: urls })}
+                                label="Product Screenshots"
+                                folder="electronicscience/products"
+                                maxImages={10}
+                            />
                         </div>
 
                         <button

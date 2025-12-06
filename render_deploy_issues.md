@@ -29,7 +29,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 }
 ```
 
-**Page Components (`app/admin/blogs/[id]/page.tsx`):**
+**Page Components (`app/admin/blogs/[id]/page.tsx`):
 ```typescript
 import { use } from 'react';
 
@@ -69,3 +69,74 @@ Error: Cannot destructure property 'data' of '(0 , c.useSession)(...)' as it is 
   "@prisma/client": "^5.10.0"
 }
 ```
+
+---
+
+## 5. Missing LangChain Dependencies (Dec 4, 2024)
+**Issue:** Build failed with module not found error for `@langchain/openai`.
+```
+Module not found: Can't resolve '@langchain/openai'
+```
+**Root Cause:** The application uses LangChain for knowledge base embeddings functionality, but the required packages were not listed in package.json dependencies.
+
+**Fix:** Added langchain dependencies to `package.json`:
+```json
+{
+  "@langchain/core": "^0.3.36",
+  "@langchain/openai": "^0.3.15",
+  "langchain": "^0.3.11"
+}
+```
+**Note:** Version compatibility matters - used `@langchain/openai@0.3.15` instead of `1.0.3` due to incompatible peer dependencies.
+
+## 6. Incorrect Import Path in knowledge/route.ts (Dec 4, 2024)
+**Issue:** Module not found error for auth route import.
+```
+Module not found: Can't resolve '../../auth/[...nextauth]/route'
+```
+**Root Cause:** `app/api/knowledge/route.ts` was using incorrect relative path (`../../auth`) when it should use `../auth`.
+
+**Fix:** Corrected import in `app/api/knowledge/route.ts`:
+```diff
+-import { authOptions } from '../../auth/[...nextauth]/route';
++import { authOptions } from '../auth/[...nextauth]/route';
+```
+
+## 7. Build-Time OpenAI Initialization (Dec 4, 2024)
+**Issue:** Build failed during static page generation.
+```
+OpenAI or Azure OpenAI API key or Token Provider not found
+```
+**Root Cause:** OpenAI clients were initialized at module level, causing errors during Next.js static page generation when environment variables aren't available.
+
+**Fix:** Implemented lazy initialization in `lib/embeddings.ts` and `app/api/chat/route.ts`:
+```typescript
+// lib/embeddings.ts
+let embeddings: OpenAIEmbeddings | null = null;
+function getEmbeddings(): OpenAIEmbeddings {
+    if (!embeddings) {
+        embeddings = new OpenAIEmbeddings({
+            openAIApiKey: process.env.OPENAI_API_KEY,
+            modelName: 'text-embedding-ada-002',
+        });
+    }
+    return embeddings;
+}
+
+// app/api/chat/route.ts
+export const dynamic = 'force-dynamic';
+
+let openai: OpenAI | null = null;
+function getOpenAI(): OpenAI {
+    if (!openai) {
+        openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    }
+    return openai;
+}
+```
+
+---
+
+## Deployment Status
+✅ **All issues resolved** - Last successful deployment: December 4, 2024 (commit `88adc06`)
+

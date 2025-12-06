@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import ImageUploader from './ImageUploader';
 
 export default function BlogEditor({ params }: { params: { id?: string } }) {
     const router = useRouter();
@@ -126,19 +127,12 @@ export default function BlogEditor({ params }: { params: { id?: string } }) {
                                     <option>Company News</option>
                                 </select>
                             </div>
-                            <div>
-                                <label className="block text-gray-400 text-sm mb-2">Cover Image URL</label>
-                                <input
-                                    type="text"
-                                    value={formData.coverImage}
-                                    onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
-                                    className="w-full bg-black/50 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-teal-500"
-                                    placeholder="https://..."
-                                />
-                                <p className="text-xs text-gray-500 mt-1">
-                                    (Image upload coming soon. Paste a URL for now.)
-                                </p>
-                            </div>
+                            <ImageUploader
+                                value={formData.coverImage}
+                                onChange={(url) => setFormData({ ...formData, coverImage: url })}
+                                label="Cover Image"
+                                folder="electronicscience/blog"
+                            />
                             <div className="flex items-center gap-3 pt-4 border-t border-white/10">
                                 <input
                                     type="checkbox"
