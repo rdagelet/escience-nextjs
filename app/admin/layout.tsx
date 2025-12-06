@@ -34,6 +34,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: 'Blogs', href: '/admin/blogs', icon: '📝' },
         { name: 'Products', href: '/admin/products', icon: '📦' },
         { name: 'Careers', href: '/admin/careers', icon: '💼' },
+        { name: 'Testimonials', href: '/admin/testimonials', icon: '💬' },
         { name: 'Knowledge Base', href: '/admin/knowledge', icon: '🧠' },
         { name: 'Chat Logs', href: '/admin/chats', icon: '🤖' },
     ];

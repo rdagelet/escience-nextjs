@@ -4,11 +4,21 @@ import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import ChatWidget from '@/components/ChatWidget';
 
+interface Testimonial {
+  id: string;
+  name: string;
+  title: string;
+  company: string;
+  quote: string;
+  avatar: string | null;
+}
+
 export default function Home() {
   const [isSplashVisible, setIsSplashVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
   // Splash Screen Logic
   useEffect(() => {
@@ -23,6 +33,14 @@ export default function Home() {
     }, 3000);
 
     return () => clearTimeout(timer1);
+  }, []);
+
+  // Fetch Testimonials
+  useEffect(() => {
+    fetch('/api/testimonials')
+      .then((res) => res.json())
+      .then((data) => setTestimonials(data))
+      .catch((err) => console.error('Error fetching testimonials:', err));
   }, []);
 
   // Scroll Logic (Nav, BackToTop, Parallax)
@@ -353,57 +371,39 @@ export default function Home() {
           <h2 className="section-title-center fade-in">What Our Customers Say</h2>
 
           <div className="testimonials-grid">
-            <div className="testimonial-card fade-up">
-              <div className="testimonial-content">
-                <p>"EDTR has helped us grow our business. It helped us address operational gaps as fast as possible and avoid sales loss through real-time visibility of field data and goods."</p>
-              </div>
-              <div className="testimonial-author">
-                <div className="author-avatar">AG</div>
-                <div className="author-info">
-                  <div className="author-name">Andy Gapuz</div>
-                  <div className="author-title">Senior Operations Manager</div>
+            {testimonials.length > 0 ? (
+              testimonials.map((testimonial, index) => (
+                <div key={testimonial.id} className={`testimonial-card fade-up ${index > 0 ? `delay-${index}` : ''}`}>
+                  <div className="testimonial-content">
+                    <p>&quot;{testimonial.quote}&quot;</p>
+                  </div>
+                  <div className="testimonial-author">
+                    {testimonial.avatar ? (
+                      <img
+                        src={testimonial.avatar}
+                        alt={testimonial.name}
+                        className="author-avatar"
+                        style={{ width: '50px', height: '50px', borderRadius: '50%', objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <div className="author-avatar">
+                        {testimonial.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
+                      </div>
+                    )}
+                    <div className="author-info">
+                      <div className="author-name">{testimonial.name}</div>
+                      <div className="author-title">{testimonial.title}, {testimonial.company}</div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="testimonial-card fade-up">
+                <div className="testimonial-content">
+                  <p>Loading testimonials...</p>
                 </div>
               </div>
-            </div>
-
-            <div className="testimonial-card fade-up delay-1">
-              <div className="testimonial-content">
-                <p>"The feedback from our field operations is fast and immediate. Their technical support team is always available, and the SFE app is iOS-ready. PocketWiSE SFE's flexibility made us choose it."</p>
-              </div>
-              <div className="testimonial-author">
-                <div className="author-avatar">NS</div>
-                <div className="author-info">
-                  <div className="author-name">Neville F. Sisgado</div>
-                  <div className="author-title">District Sales Manager</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="testimonial-card fade-up delay-2">
-              <div className="testimonial-content">
-                <p>"Thank you eScience for supporting our field force during lockdowns. You introduced new features in a dynamic and flexible app. We appreciate the innovations being introduced."</p>
-              </div>
-              <div className="testimonial-author">
-                <div className="author-avatar">CJ</div>
-                <div className="author-info">
-                  <div className="author-name">Caroline Junsay</div>
-                  <div className="author-title">SFE Manager</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="testimonial-card fade-up delay-3">
-              <div className="testimonial-content">
-                <p>"We're grateful to eScience for helping our organization transform how we cover and reach customers. We can capture all data and engagements with accuracy and productivity."</p>
-              </div>
-              <div className="testimonial-author">
-                <div className="author-avatar">JK</div>
-                <div className="author-info">
-                  <div className="author-name">Julie Anne Catalan-Kempis</div>
-                  <div className="author-title">Commercial Excellence Manager</div>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
