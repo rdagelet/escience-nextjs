@@ -35,6 +35,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **CSS Class**: `.text-highlight` - Applies brand gradient (teal-to-blue) to emphasized keywords
 - Brand color highlights on key terms: "AI-Driven" and "Intelligent Automation"
+- **Global Navigation Component** (`components/Navigation.tsx`)
+  - Reusable navigation with eScience logo in top left
+  - Logo clickable, links to home page
+  - Appears on all pages (home, blog, products, careers, admin)
+  - Mobile-responsive hamburger menu
+  - Sticky header with scroll effects
 
 ### Fixed
 - **Responsive Design**: Reduced hero title minimum font size from 3rem to 2.5rem for better mobile rendering
@@ -42,9 +48,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Technical Details
 - **Files Modified**:
-  - `app/page.tsx` - All content updates
+  - `app/page.tsx` - Content updates and navigation cleanup
   - `app/globals.css` - Added `.text-highlight` class and responsive improvements
+  - `app/layout.tsx` - Added Navigation component to root layout
+  - `components/Navigation.tsx` - New reusable navigation component (created)
 - **Design Impact**: Messaging now positions eScience as an AI-driven enterprise transformation partner rather than just a mobile solutions provider
+- **Navigation Impact**: Consistent branding and navigation across all pages with clickable logo for easy homepage return
 
 ---
 

@@ -43,6 +43,7 @@ The eScience website has been transformed from a static site into a **dynamic, d
 ✅ **Modern Animations** - Framer Motion for smooth UX  
 ✅ **Cloud-First** - Auto-deploy on GitHub push  
 ✅ **AI-Driven Messaging** - Positioned as enterprise transformation partner (v1.2.0)  
+✅ **Global Navigation** - Clickable logo and consistent nav on all pages (v1.2.0)  
 
 ---
 
