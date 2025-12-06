@@ -32,8 +32,6 @@ interface HomeStat {
 
 export default function Home() {
   const [isSplashVisible, setIsSplashVisible] = useState(true);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [whyFeatures, setWhyFeatures] = useState<WhyFeature[]>([]);
@@ -78,13 +76,10 @@ export default function Home() {
       .catch((err) => console.error('Error fetching home stats:', err));
   }, []);
 
-  // Scroll Logic (Nav, BackToTop, Parallax)
+  // Scroll Logic (BackToTop, Parallax)
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
-
-      // Nav Scrolled State
-      setScrolled(currentScroll > 100);
 
       // Back to Top Visibility
       setShowBackToTop(currentScroll > 300);
@@ -193,7 +188,6 @@ export default function Home() {
         top: targetPosition,
         behavior: 'smooth'
       });
-      setIsMobileMenuOpen(false);
     }
   };
 
@@ -213,28 +207,6 @@ export default function Home() {
           <div className="splash-radial"></div>
         </div>
       )}
-
-      {/* Navigation */}
-      <nav className={`nav ${scrolled ? 'scrolled' : ''}`}>
-        <div className="nav-container">
-          <Link href="#" className="nav-logo" onClick={(e) => scrollToSection(e, 'body')}>
-            <img src="/assets/images/escience-logo.png" alt="eScience - Architects of Innovation" className="nav-logo-img" />
-            <span className="text-[10px] text-gray-500 ml-2 mt-1 self-start font-mono opacity-60">v1.1</span>
-          </Link>
-          <div className={`nav-links ${isMobileMenuOpen ? 'active' : ''}`}>
-            <a href="#solutions" onClick={(e) => scrollToSection(e, '#solutions')}>Solutions</a>
-            <a href="#why-us" onClick={(e) => scrollToSection(e, '#why-us')}>Why Us</a>
-            <Link href="/blog">Resources</Link>
-            <a href="#testimonials" onClick={(e) => scrollToSection(e, '#testimonials')}>Testimonials</a>
-            <a href="#contact" className="nav-cta" onClick={(e) => scrollToSection(e, '#contact')}>Get Started</a>
-          </div>
-          <div className={`nav-mobile-toggle ${isMobileMenuOpen ? 'active' : ''}`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      </nav>
 
       {/* Hero Section */}
       <section className="hero">

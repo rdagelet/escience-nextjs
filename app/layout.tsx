@@ -3,6 +3,7 @@
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "@/components/SessionProvider";
+import Navigation from "@/components/Navigation";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -18,12 +19,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>eScience - Architects of Innovation</title>
-        <meta name="description" content="Providing mobile solutions, CRM tools, inventory management, and custom software since 2000." />
+        <title>eScience - Transforming the AI-Driven Enterprise</title>
+        <meta name="description" content="AI-driven enterprise transformation powered by real-time data and intelligent automation. Enterprise mobile solutions since 2000." />
         <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={`${montserrat.variable} antialiased`}>
         <SessionProvider>
+          <Navigation />
           {children}
         </SessionProvider>
       </body>
