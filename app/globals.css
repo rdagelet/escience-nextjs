@@ -369,11 +369,11 @@ body {
 }
 
 .hero-title {
-  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-size: clamp(2.5rem, 8vw, 5.5rem);
   font-weight: var(--font-weight-extrabold);
   color: white;
   margin-bottom: var(--spacing-md);
-  line-height: 1.1;
+  line-height: 1.15;
   letter-spacing: -0.02em;
 }
 
@@ -383,6 +383,14 @@ body {
   margin-bottom: var(--spacing-lg);
   font-weight: var(--font-weight-normal);
   line-height: 1.6;
+}
+
+.text-highlight {
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: var(--font-weight-bold);
 }
 
 .hero-cta {

@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# eScience Next.js Platform
 
-## Getting Started
+**Version:** 1.2.0  
+**Live URL:** https://escience-nextjs.onrender.com/  
+**GitHub:** https://github.com/rdagelet/escience-nextjs
 
-First, run the development server:
+A modern, database-driven Next.js 16 application for eScience - an AI-driven enterprise transformation partner.
+
+---
+
+## 🚀 Quick Start
 
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📚 Documentation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **[HANDOVER.md](./documentation/HANDOVER.md)** - Complete platform guide for maintainers
+- **[CHANGELOG.md](./CHANGELOG.md)** - Version history and release notes
+- **[CONTENT_TRANSFORMATION.md](./documentation/CONTENT_TRANSFORMATION.md)** - v1.2.0 AI-driven messaging strategy
+- **[FUNCTIONAL_SPECS.md](./documentation/FUNCTIONAL_SPECS.md)** - Technical specifications
+- **[DEPLOYMENT_ISSUES.md](./documentation/DEPLOYMENT_ISSUES.md)** - Troubleshooting guide
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔑 Admin Portal
 
-## Learn More
+Access at: https://escience-nextjs.onrender.com/admin/login
 
-To learn more about Next.js, take a look at the following resources:
+Default credentials (change immediately):
+- Email: `admin@electronicscience.net`
+- Password: `admin123`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Tech Stack
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Framework:** Next.js 16.0.7
+- **Database:** PostgreSQL + Prisma
+- **Auth:** NextAuth.js
+- **AI:** OpenAI GPT-3.5
+- **Hosting:** Render
+- **UI:** React 19, Tailwind CSS 4
 
-## Deploy on Vercel
+## 📦 Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+✅ Full-featured Admin Portal  
+✅ Blog & Careers Management  
+✅ AI-powered Chatbot  
+✅ Database-driven Content  
+✅ Auto-deploy on Git Push  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📝 Latest Updates (v1.2.0)
+
+**AI-Driven Enterprise Transformation:**
+- Repositioned messaging from mobile solutions to enterprise AI
+- Updated hero section with brand gradient highlights
+- Revised "Why eScience" to emphasize intelligent ecosystems
+- See [CONTENT_TRANSFORMATION.md](./documentation/CONTENT_TRANSFORMATION.md) for details
+
+## 🚀 Deployment
+
+Auto-deploys to Render on push to `main`:
+```bash
+git add .
+git commit -m "Your changes"
+git push origin main
+```
+
+## 📄 License
+
+© 2025 eScience. All rights reserved.

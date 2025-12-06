@@ -1,9 +1,9 @@
 # eScience Next.js Platform - Complete Handover Guide
 
-**Version:** 1.1.0  
+**Version:** 1.2.0  
 **Live URL:** https://escience-nextjs.onrender.com/  
 **GitHub:** https://github.com/rdagelet/escience-nextjs  
-**Last Updated:** December 4, 2025
+**Last Updated:** December 6, 2025
 
 ---
 
@@ -42,6 +42,7 @@ The eScience website has been transformed from a static site into a **dynamic, d
 ✅ **Real AI Chatbot** - Powered by OpenAI  
 ✅ **Modern Animations** - Framer Motion for smooth UX  
 ✅ **Cloud-First** - Auto-deploy on GitHub push  
+✅ **AI-Driven Messaging** - Positioned as enterprise transformation partner (v1.2.0)  
 
 ---
 

@@ -207,8 +207,8 @@ export default function Home() {
       {isSplashVisible && (
         <div className="splash-screen" id="splashScreen">
           <div className="splash-content">
-            <h1 className="splash-title">Architects of Innovation</h1>
-            <p className="splash-subtitle">Powered by Real-Time Automation & AI</p>
+            <h1 className="splash-title">Transforming the AI-Driven Enterprise</h1>
+            <p className="splash-subtitle">Powered by Real-Time Data & Intelligent Automation</p>
           </div>
           <div className="splash-radial"></div>
         </div>
@@ -240,10 +240,10 @@ export default function Home() {
       <section className="hero">
         <div className="hero-background"></div>
         <div className="hero-content fade-in">
-          <h1 className="hero-title">Architects of Innovation</h1>
-          <p className="hero-subtitle">Boost your productivity and efficiency using the right solutions tailored fit for your organization. Automate your business operations now.</p>
+          <h1 className="hero-title">Transforming the <span className="text-highlight">AI-Driven</span> Enterprise</h1>
+          <p className="hero-subtitle">Powered by Real-Time Data & <span className="text-highlight">Intelligent Automation</span></p>
           <div className="hero-cta">
-            <a href="#contact" className="btn-primary" onClick={(e) => scrollToSection(e, '#contact')}>Request a Demo</a>
+            <a href="#contact" className="btn-primary" onClick={(e) => scrollToSection(e, '#contact')}>Start Your Transformation</a>
             <a href="#solutions" className="btn-secondary" onClick={(e) => scrollToSection(e, '#solutions')}>Explore Solutions</a>
           </div>
         </div>
@@ -307,12 +307,12 @@ export default function Home() {
         <div className="container">
           <div className="content-split">
             <div className="content-left fade-in-left">
-              <h2 className="section-title">Stop Making Reactive Decisions</h2>
-              <p className="section-text">Delayed reports taking days or weeks? Missing opportunities due to lack of field data access? It's time to shift from reactive to proactive.</p>
+              <h2 className="section-title">Evolve from Reactive to AI-Proactive</h2>
+              <p className="section-text">Delayed reports and missing field data stall growth. Leverage intelligent insights to predict needs, automate workflows, and shift your operations from reactive to proactive.</p>
               <div className="highlight-box">
                 <div className="highlight-icon">⚡</div>
                 <div>
-                  <h3>The Solution</h3>
+                  <h3>The Intelligent Solution</h3>
                   <p>Real-time data and automation that lead to efficient, productive processes</p>
                 </div>
               </div>
@@ -341,7 +341,7 @@ export default function Home() {
         </div>
         <div className="container">
           <h2 className="section-title-center fade-in">What We Do</h2>
-          <p className="section-subtitle-center fade-in delay-1">Developing the right mobile solutions for your business</p>
+          <p className="section-subtitle-center fade-in delay-1">Deploying the data engines that power your business intelligence</p>
 
           <div className="solutions-grid">
             <div className="solution-card fade-up">
@@ -396,23 +396,23 @@ export default function Home() {
               <>
                 <div className="why-card fade-in-scale">
                   <div className="why-number">01</div>
-                  <h3>Proven Track Record</h3>
-                  <p>Established in 2000, we bring over two decades of expertise in developing enterprise mobile solutions. Employee-owned with nearly 100 tech specialists.</p>
+                  <h3>Decades of Digital Transformation</h3>
+                  <p>Established in 2000, we have over two decades of expertise evolving businesses from traditional workflows to future-ready, automated enterprises.</p>
                 </div>
                 <div className="why-card fade-in-scale delay-1">
                   <div className="why-number">02</div>
-                  <h3>Award-Winning Solutions</h3>
-                  <p>Recognized nationally and internationally. Nominated as AWS Partner of the Year in 2018 for our innovative cloud solutions.</p>
+                  <h3>Award-Winning Innovation</h3>
+                  <p>Recognized internationally for cloud and mobile excellence. AWS Partner of the Year Nominee (2018) for pioneering scalable enterprise solutions.</p>
                 </div>
                 <div className="why-card fade-in-scale delay-2">
                   <div className="why-number">03</div>
-                  <h3>Mobile Technology Pioneers</h3>
-                  <p>Providing mobile solutions since 2000 through wireless technology. Zero downtime or interruptions over 24+ years.</p>
+                  <h3>Unified AI & Mobile Ecosystems</h3>
+                  <p>We don't just build apps; we engineer intelligent ecosystems. Seamlessly capturing data at the edge to power central AI decision-making.</p>
                 </div>
                 <div className="why-card fade-in-scale delay-3">
                   <div className="why-number">04</div>
-                  <h3>Trusted Worldwide</h3>
-                  <p>Preferred technology partner of 100+ companies across multiple industries and countries.</p>
+                  <h3>Global Enterprise Partner</h3>
+                  <p>The preferred technology partner for 100+ industry leaders across the globe, scaling operations with security and precision.</p>
                 </div>
               </>
             )}
