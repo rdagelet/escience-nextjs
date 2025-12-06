@@ -82,8 +82,29 @@ model KnowledgeChunk {
   metadata  Json?    // { source: "filename.pdf", page: 1, title: "Product Guide" }
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
+
   @@index([createdAt])
+}
+
+model WhyFeature {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  order       Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model HomeStat {
+  id        String   @id @default(cuid())
+  label     String
+  value     String
+  suffix    String?
+  order     Int      @default(0)
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Role {

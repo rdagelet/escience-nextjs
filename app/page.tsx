@@ -13,12 +13,31 @@ interface Testimonial {
   avatar: string | null;
 }
 
+interface WhyFeature {
+  id: string;
+  title: string;
+  description: string;
+  order: number;
+  active: boolean;
+}
+
+interface HomeStat {
+  id: string;
+  label: string;
+  value: string;
+  suffix: string | null;
+  order: number;
+  active: boolean;
+}
+
 export default function Home() {
   const [isSplashVisible, setIsSplashVisible] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [whyFeatures, setWhyFeatures] = useState<WhyFeature[]>([]);
+  const [homeStats, setHomeStats] = useState<HomeStat[]>([]);
 
   // Splash Screen Logic
   useEffect(() => {
@@ -41,6 +60,22 @@ export default function Home() {
       .then((res) => res.json())
       .then((data) => setTestimonials(data))
       .catch((err) => console.error('Error fetching testimonials:', err));
+  }, []);
+
+  // Fetch Why Features
+  useEffect(() => {
+    fetch('/api/why-features')
+      .then((res) => res.json())
+      .then((data) => setWhyFeatures(data))
+      .catch((err) => console.error('Error fetching why features:', err));
+  }, []);
+
+  // Fetch Home Stats
+  useEffect(() => {
+    fetch('/api/home-stats')
+      .then((res) => res.json())
+      .then((data) => setHomeStats(data))
+      .catch((err) => console.error('Error fetching home stats:', err));
   }, []);
 
   // Scroll Logic (Nav, BackToTop, Parallax)
@@ -221,22 +256,33 @@ export default function Home() {
       <section className="stats-section">
         <div className="container">
           <div className="stats-grid">
-            <div className="stat-card card fade-up">
-              <div className="stat-number" data-target="24">0</div>
-              <div className="stat-label">Years of Innovation Since 2000</div>
-            </div>
-            <div className="stat-card card fade-up">
-              <div className="stat-number" data-target="100">0</div>
-              <div className="stat-label">Clients Worldwide</div>
-            </div>
-            <div className="stat-card card fade-up">
-              <div className="stat-number" data-target="100">0</div>
-              <div className="stat-label">Uptime Since 2000</div>
-            </div>
-            <div className="stat-card card fade-up">
-              <div className="stat-icon">☁️</div>
-              <div className="stat-label">AWS Partner of the Year Nominee 2018</div>
-            </div>
+            {homeStats.length > 0 ? (
+              homeStats.map((stat, index) => (
+                <div key={stat.id} className={`stat-card card fade-up ${index > 0 ? `delay-${index}` : ''}`}>
+                  <div className="stat-number" data-target={stat.value}>{stat.value}{stat.suffix || ''}</div>
+                  <div className="stat-label">{stat.label}</div>
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="stat-card card fade-up">
+                  <div className="stat-number" data-target="24">0</div>
+                  <div className="stat-label">Years of Innovation Since 2000</div>
+                </div>
+                <div className="stat-card card fade-up">
+                  <div className="stat-number" data-target="100">0</div>
+                  <div className="stat-label">Clients Worldwide</div>
+                </div>
+                <div className="stat-card card fade-up">
+                  <div className="stat-number" data-target="100">0</div>
+                  <div className="stat-label">Uptime Since 2000</div>
+                </div>
+                <div className="stat-card card fade-up">
+                  <div className="stat-icon">☁️</div>
+                  <div className="stat-label">AWS Partner of the Year Nominee 2018</div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -338,26 +384,38 @@ export default function Home() {
           <h2 className="section-title-center fade-in">Why eScience?</h2>
 
           <div className="why-grid">
-            <div className="why-card fade-in-scale">
-              <div className="why-number">01</div>
-              <h3>Proven Track Record</h3>
-              <p>Established in 2000, we bring over two decades of expertise in developing enterprise mobile solutions. Employee-owned with nearly 100 tech specialists.</p>
-            </div>
-            <div className="why-card fade-in-scale delay-1">
-              <div className="why-number">02</div>
-              <h3>Award-Winning Solutions</h3>
-              <p>Recognized nationally and internationally. Nominated as AWS Partner of the Year in 2018 for our innovative cloud solutions.</p>
-            </div>
-            <div className="why-card fade-in-scale delay-2">
-              <div className="why-number">03</div>
-              <h3>Mobile Technology Pioneers</h3>
-              <p>Providing mobile solutions since 2000 through wireless technology. Zero downtime or interruptions over 24+ years.</p>
-            </div>
-            <div className="why-card fade-in-scale delay-3">
-              <div className="why-number">04</div>
-              <h3>Trusted Worldwide</h3>
-              <p>Preferred technology partner of 100+ companies across multiple industries and countries.</p>
-            </div>
+            {whyFeatures.length > 0 ? (
+              whyFeatures.map((feature, index) => (
+                <div key={feature.id} className={`why-card fade-in-scale ${index > 0 ? `delay-${index}` : ''}`}>
+                  <div className="why-number">{String(index + 1).padStart(2, '0')}</div>
+                  <h3>{feature.title}</h3>
+                  <p>{feature.description}</p>
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="why-card fade-in-scale">
+                  <div className="why-number">01</div>
+                  <h3>Proven Track Record</h3>
+                  <p>Established in 2000, we bring over two decades of expertise in developing enterprise mobile solutions. Employee-owned with nearly 100 tech specialists.</p>
+                </div>
+                <div className="why-card fade-in-scale delay-1">
+                  <div className="why-number">02</div>
+                  <h3>Award-Winning Solutions</h3>
+                  <p>Recognized nationally and internationally. Nominated as AWS Partner of the Year in 2018 for our innovative cloud solutions.</p>
+                </div>
+                <div className="why-card fade-in-scale delay-2">
+                  <div className="why-number">03</div>
+                  <h3>Mobile Technology Pioneers</h3>
+                  <p>Providing mobile solutions since 2000 through wireless technology. Zero downtime or interruptions over 24+ years.</p>
+                </div>
+                <div className="why-card fade-in-scale delay-3">
+                  <div className="why-number">04</div>
+                  <h3>Trusted Worldwide</h3>
+                  <p>Preferred technology partner of 100+ companies across multiple industries and countries.</p>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>
